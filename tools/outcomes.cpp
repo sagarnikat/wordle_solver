@@ -12,8 +12,18 @@ using namespace std;
 const int WORD_LEN = 5;
 const int NUM_OUTCOMES = 243;
 
-vector<string> loadWords(const string& filename) {
-    ifstream file(filename);
+// load words from a binary file (5 bytes per word) or JSON fallback
+vector<string> loadWords(const string& binFile, const string& jsonFile) {
+    ifstream bin(binFile, ios::binary);
+    if (bin) {
+        vector<string> words;
+        char buf[WORD_LEN];
+        while (bin.read(buf, WORD_LEN))
+            words.emplace_back(buf, WORD_LEN);
+        return words;
+    }
+
+    ifstream file(jsonFile);
     if (!file) return {};
 
     string content((istreambuf_iterator<char>(file)),
@@ -119,8 +129,10 @@ int main(int argc, char* argv[]) {
     }
 
     string wordsDir = findWordsDir(argc > 0 ? argv[0] : "");
-    vector<string> answers = loadWords(wordsDir + "possible answers.json");
-    vector<string> allWords = loadWords(wordsDir + "possible answers + valid words.json");
+    vector<string> answers = loadWords(wordsDir + "answers.bin",
+                                       wordsDir + "possible answers.json");
+    vector<string> allWords = loadWords(wordsDir + "possible.bin",
+                                        wordsDir + "possible answers + valid words.json");
 
     if (answers.empty() || allWords.empty()) {
         cerr << "Error: could not load word lists from " << wordsDir << endl;
