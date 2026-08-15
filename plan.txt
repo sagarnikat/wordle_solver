@@ -1,0 +1,17 @@
+1.collect words 
+2.create game loop
+3.prune words based on previus results
+4.appy information thory
+
+frist inpust can take from online 
+need to fing secand and possibly thare word based on results 
+must give answer at 4th attepmpt
+
+branches
+1 ->243
+2 ->59049
+3 ->14348907
+
+statts which i can use 
+1. frequncy of each letter 
+2. licklyhood of each answer 
