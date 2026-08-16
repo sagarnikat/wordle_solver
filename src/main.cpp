@@ -130,12 +130,24 @@ int cmdAnalyze(const WordLists& lists, const std::vector<uint8_t>& matrix,
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    std::string cmd;
     if (argc < 2) {
-        std::cout << kUsage;
-        return 1;
+        std::cout << "What do you want to do?\n"
+                  << "  [1] Play a new game\n"
+                  << "  [2] Solver assistant\n"
+                  << "Choose (1 or 2): " << std::flush;
+        std::getline(std::cin, cmd);
+        if (cmd == "1")
+            cmd = "play";
+        else if (cmd == "2")
+            cmd = "solve";
+        else {
+            std::cout << kUsage;
+            return 1;
+        }
+    } else {
+        cmd = argv[1];
     }
-
-    const std::string cmd = argv[1];
 
     if (cmd == "play") {
         return playGame(loadListsOrDie(argv[0]));

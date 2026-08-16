@@ -15,6 +15,7 @@ add_library(wordle_core
     src/entropy.cpp
     src/solver.cpp
     src/game.cpp
+    src/ui.cpp
 )
 target_include_directories(wordle_core PUBLIC include)
 

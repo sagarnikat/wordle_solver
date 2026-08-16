@@ -145,9 +145,13 @@ Commands:
 
 ```sh
 $ wordle play
-Guess 1/6: crane
-  █c█ █r█ █a█ █n█ █e█      # green/yellow/gray tiles + running alphabet
 ```
+
+A full-screen game opens: type a letter, Backspace to delete, Enter to submit,
+`q` to quit. The board and a QWERTY keyboard are colored green/yellow/gray as
+you play, and the answer is revealed on the last guess. Resize the window to
+see the board re-centre; `NO_COLOR=1` switches to a symbol-based monochrome
+mode (`[s]` green, `(s)` yellow).
 
 ### Interactive solver assistant
 
@@ -155,14 +159,11 @@ Handy to play along with the real Wordle:
 
 ```sh
 $ wordle solve
-Top guesses (highest entropy over 2309 candidates):
-  1  soare  5.8852 bits
-  2  roate  5.88486 bits
-  ...
-Guess used (enter for soare): soare
-Pattern ('.' gray 'y' yellow 'g' green): .gy..
-Remaining: 27
 ```
+
+Type the word you guessed (or press Enter for the best suggestion), then enter
+its colors with `1/2/3` (or `g/y/.`). The candidates are narrowed live until
+the answer is found.
 
 ### Analyze a single guess
 
