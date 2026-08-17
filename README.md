@@ -81,7 +81,6 @@ When one candidate remains, that is the answer.
 
 ```
 wordle/
-├── CMakeLists.txt              # Build configuration (library + CLI + tests)
 ├── README.md
 ├── LICENSE                     # MIT
 ├── .gitignore
@@ -99,6 +98,7 @@ wordle/
 │   ├── entropy.cpp
 │   ├── solver.cpp
 │   ├── game.cpp
+│   ├── ui.cpp
 │   └── main.cpp                # CLI entry point (play / solve / analyze)
 │
 ├── data/
@@ -107,8 +107,7 @@ wordle/
 │
 ├── tests/
 │   ├── test_feedback.cpp       # Feedback computation correctness
-│   ├── test_solver.cpp         # Solver correctness and full-word-list run
-│   └── CMakeLists.txt
+│   └── test_solver.cpp         # Solver correctness and full-word-list run
 │
 ├── benchmarks/
 │   └── benchmark_solver.cpp    # Auto-play every answer, report stats
@@ -119,15 +118,23 @@ wordle/
 
 ## Build
 
-Requires CMake ≥ 3.16 and a C++17 compiler.
+Requires a C++17 compiler. No build system required — plain `g++`:
 
 ```sh
-cmake -S . -B build
-cmake --build build -j
-ctest --test-dir build          # run unit tests
+# CLI
+g++ -std=c++17 -O2 -Iinclude src/*.cpp -o wordle
+
+# Benchmark
+g++ -std=c++17 -O2 -Iinclude benchmarks/benchmark_solver.cpp \
+    src/feedback.cpp src/word_list.cpp src/entropy.cpp src/solver.cpp -o wordle-benchmark
+
+# Tests
+g++ -std=c++17 -O2 -Iinclude tests/test_feedback.cpp src/feedback.cpp -o test_feedback
+g++ -std=c++17 -O2 -Iinclude tests/test_solver.cpp \
+    src/feedback.cpp src/word_list.cpp src/entropy.cpp src/solver.cpp -o test_solver
 ```
 
-Binaries: `build/wordle` (CLI) and `build/wordle-benchmark` (full benchmark).
+Binaries: `./wordle` (CLI) and `./wordle-benchmark` (full benchmark).
 
 ## Usage
 
@@ -183,9 +190,9 @@ Average information (entropy): 5.8852 bits
 ### Full benchmark
 
 ```sh
-$ build/wordle-benchmark          # animated run over all 2,309 answers
-$ build/wordle-benchmark --plain  # no animation, final stats only
-$ scripts/run_all_words.sh        # same, but logs to logs/benchmark-*.log
+$ ./wordle-benchmark            # animated run over all 2,309 answers
+$ ./wordle-benchmark --plain    # no animation, final stats only
+$ scripts/run_all_words.sh      # same, but logs to logs/benchmark-*.log
 ```
 
 The data directory is found next to the executable, in the current directory,
@@ -222,7 +229,8 @@ Total time:         00:33        (single-threaded, Release build)
 ## Tests
 
 ```sh
-ctest --test-dir build
+$ ./test_feedback
+$ ./test_solver
 ```
 
 - `test_feedback` — feedback correctness: exact matches, duplicates in guess

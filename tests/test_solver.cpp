@@ -88,13 +88,12 @@ int main() {
         }
     }
 
-    // Real word lists (available when built via CMake): the full 2309-word
-    // solve must finish under 6 guesses and keep the distribution sane.
-#ifdef WORDLE_DATA_DIR
+    // Real word lists (resolved via $WORDLE_DATA_DIR or ./data): the full
+    // 2309-word solve must finish under 6 guesses and keep the distribution
+    // sane.
     {
-        const std::string dir = WORDLE_DATA_DIR;
-        const auto answers = loadWordsFromFile(dir + "/answers.txt");
-        const auto guesses = loadWordsFromFile(dir + "/guesses.txt");
+        const auto answers = loadWordsFromFile(findDataDir("") + "/answers.txt");
+        const auto guesses = loadWordsFromFile(findDataDir("") + "/guesses.txt");
         EXPECT(answers.size() == 2309);
         EXPECT(guesses.size() == 12947);
 
@@ -105,7 +104,6 @@ int main() {
         EXPECT(result.average > 0 && result.average < 6);
         EXPECT(result.total == 2309);
     }
-#endif
 
     if (failures == 0) {
         std::cout << "test_solver: all tests passed\n";

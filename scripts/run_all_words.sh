@@ -5,11 +5,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-BIN=build/wordle-benchmark
+BIN=wordle-benchmark
 if [[ ! -x "$BIN" ]]; then
     echo "Building benchmark (first run)..." >&2
-    cmake -S . -B build >/dev/null
-    cmake --build build --target wordle-benchmark -j >/dev/null
+    g++ -std=c++17 -O2 -Iinclude benchmarks/benchmark_solver.cpp \
+        src/feedback.cpp src/word_list.cpp src/entropy.cpp src/solver.cpp \
+        -o "$BIN"
 fi
 
 LOG_DIR=logs
